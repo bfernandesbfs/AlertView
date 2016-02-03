@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 
 /**
- * Hospital Plus
+ * Alert View
  * <p/>
- * StartiOne - 26/01/16
+ * BFS - 02/02/16
  * Created by brunofernandes.
  */
 public class AlertView {
