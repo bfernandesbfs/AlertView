@@ -76,8 +76,10 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                alertView.dismiss();
+                alertView.change(AlertView.AlertType.DEFAULT,"Title",-1)
+                        .setContainerColor(R.color.colorWhite)
+                        .setMessage("Messagem mais texto mais texto mais texto").addButtonOk("Cancel", null);
             }
-        }, 5000);
+        }, 2000);
     }
 }

@@ -2,18 +2,27 @@ package br.com.bfs.alertviewapp;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.lang.reflect.Field;
 
 
 /**
@@ -211,9 +220,11 @@ public class AlertView {
         setDialog();
     }
 
-    private void changeAlert(String title, int icon) {
+    private void changeAlert(final String title, final int icon) {
 
-        containerBody.removeAllViewsInLayout();
+        updateFlagWindow();
+
+        containerBody.removeAllViews();
 
         if (alertType == AlertType.LOAD) {
             createAlertLoad(title);
@@ -234,8 +245,6 @@ public class AlertView {
             setTitle(title);
             setHeaderIcon(icon);
         }
-
-
     }
 
     private void setupFindById() {
@@ -253,7 +262,6 @@ public class AlertView {
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alert_main_view);
-
         setupFindById();
     }
 
@@ -353,6 +361,18 @@ public class AlertView {
 
         } else {
             containerFooter.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateFlagWindow(){
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams wp =  window.getAttributes();
+        try {
+            int currentFlags = (Integer) wp.getClass().getField("privateFlags").get(wp);
+            wp.getClass().getField("privateFlags").set(wp, currentFlags|0x00000040);
+            ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE)).updateViewLayout(dialog.getWindow().getDecorView(), wp);
+        } catch (Exception e) {
+            Log.i("WindowManagerError",e.getMessage());
         }
     }
 }
